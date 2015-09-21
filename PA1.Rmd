@@ -1,0 +1,49 @@
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
+---
+
+
+## Loading and preprocessing the data
+````{r}
+library(dplyr)
+options(digits = 3)
+activity = read.csv("./activity.csv")
+head(activity)
+str(activity)
+```
+## What is mean total number of steps taken per day?
+
+The total number of steps taken per day and its histogram is shown as follows.
+
+```{r}
+steps_daily = summarize(group_by(activity, date), sum=sum(steps, na.rm = TRUE))
+steps_daily_mean = mean(steps_daily$sum, na.rm = TRUE)
+steps_daily_median = median(steps_daily$sum, na.rm = TRUE)
+hist(steps_daily$sum, 
+     xlab="the total number of steps taken per day", 
+     ylab="days",
+     main="Histogram of the total number of steps taken per day")
+```
+
+The mean of the total number of steps taken per day is `r steps_daily_mean` and 
+the median of the total number of steps taken per day is `r steps_daily_median`
+
+## What is the average daily activity pattern?
+
+The time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis) is as follows.
+
+```{r}
+steps_interval = summarize(group_by(activity, interval), mean=mean(steps, na.rm = TRUE))
+plot(mean ~ interval, steps_interval, type='l', ylab="average steps taken")
+```
+
+and interal `r steps_interval[which.max(steps_interval$mean),]$interval` contains the maximum number of steps.
+
+## Imputing missing values
+
+
+
+## Are there differences in activity patterns between weekdays and weekends?
